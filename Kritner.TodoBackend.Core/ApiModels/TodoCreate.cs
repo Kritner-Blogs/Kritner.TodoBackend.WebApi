@@ -1,10 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Kritner.TodoBackend.Core.Models
+namespace Kritner.TodoBackend.Core.ApiModels
 {
-    public record TodoItem
+    public record TodoCreate
     {
-        public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
         public bool Completed { get; set; }
         public int Order { get; set; }

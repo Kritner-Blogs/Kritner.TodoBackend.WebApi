@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace Kritner.TodoBackend.Core.Models
+﻿namespace Kritner.TodoBackend.Core.ApiModels
 {
-    public record TodoItem
+    public record TodoUpdate
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public bool Completed { get; set; }
         public int Order { get; set; }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Kritner.TodoBackend.Core.Providers;
 using Kritner.TodoBackend.Core.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,10 +31,12 @@ namespace Kritner.TodoBackend.WebApi
             services.AddControllers();
 
             services.AddSingleton<ITodoRepository, TodoInMemoryRepository>();
+            services.AddSingleton<IIdentifierProvider, IdentifierProvider>();
             
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
-                builder.AllowAnyOrigin()
+                builder
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
@@ -55,7 +58,7 @@ namespace Kritner.TodoBackend.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kritner.TodoBackend.WebApi v1"));
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors();

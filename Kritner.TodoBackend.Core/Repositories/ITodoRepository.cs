@@ -9,9 +9,9 @@ namespace Kritner.TodoBackend.Core.Repositories
     {
         Task Create(TodoItem todo);
         Task Update(TodoItem todo);
-        Task<TodoItem> Delete(Guid id);
+        Task<TodoItem> Delete(int id);
         Task DeleteAll();
         Task<IEnumerable<TodoItem>> Get();
-        Task<TodoItem> Get(Guid id);
+        Task<TodoItem> Get(int id);
     }
 }

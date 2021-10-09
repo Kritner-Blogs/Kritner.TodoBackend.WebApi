@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kritner.TodoBackend.Core.ApiModels;
 using Kritner.TodoBackend.Core.ExtensionMethods;
 using Kritner.TodoBackend.Core.Models;
+using Kritner.TodoBackend.Core.Providers;
 using Kritner.TodoBackend.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +17,16 @@ namespace Kritner.TodoBackend.WebApi.Controllers
     public class TodoController : ControllerBase
     {
         private readonly ITodoRepository _todoRepository;
+        private readonly IIdentifierProvider _identifierProvider;
 
-        public TodoController(ITodoRepository todoRepository)
+        public TodoController(ITodoRepository todoRepository, IIdentifierProvider identifierProvider)
         {
             _todoRepository = todoRepository;
+            _identifierProvider = identifierProvider;
         }
 
-        [HttpGet("/")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<TodoGet>), 200)]
         public async Task<IActionResult> GetAll()
         {
             var todos = await _todoRepository.Get();
@@ -30,22 +35,28 @@ namespace Kritner.TodoBackend.WebApi.Controllers
             return Ok(todos.ToList().Select(s => s.ToTodoGet(rootUrl)));
         }
         
-        [HttpPost("/")]
-        public async Task<IActionResult> Create(TodoCreateUpdate todoCreateUpdate)
+        [HttpPost]
+        [ProducesResponseType(typeof(TodoGet), 200)]
+        public async Task<IActionResult> Create(TodoCreate todoCreate)
         {
             var todo = new TodoItem()
             {
-                Id = Guid.NewGuid(),
-                Title = todoCreateUpdate.Title
+                Id = _identifierProvider.GetId(),
+                Title = todoCreate.Title,
+                Completed = todoCreate.Completed,
+                Order = todoCreate.Order,
             };
             
             await _todoRepository.Create(todo);
-            
-            return Ok(todo.ToTodoGet(GetRootUrl()));
+
+            var createdTodo = todo.ToTodoGet(GetRootUrl());
+            return Created(createdTodo.Url, createdTodo);
         }
 
-        [HttpGet("/{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TodoGet), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> Get(int id)
         {
             var todo = await _todoRepository.Get(id);
 
@@ -55,15 +66,16 @@ namespace Kritner.TodoBackend.WebApi.Controllers
             return Ok(todo.ToTodoGet(GetRootUrl()));
         }
 
-        [HttpPatch("/{id}")]
-        public async Task<IActionResult> Update(Guid id, TodoCreateUpdate todoCreateUpdate)
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(TodoGet), 200)]
+        public async Task<IActionResult> Update(int id, TodoUpdate todoUpdate)
         {
             var todo = new TodoItem()
             {
                 Id = id,
-                Title = todoCreateUpdate.Title,
-                Completed = todoCreateUpdate.Completed,
-                Order = todoCreateUpdate.Order
+                Title = todoUpdate.Title,
+                Completed = todoUpdate.Completed,
+                Order = todoUpdate.Order
             };
             
             await _todoRepository.Update(todo);
@@ -71,7 +83,7 @@ namespace Kritner.TodoBackend.WebApi.Controllers
             return Ok(todo.ToTodoGet(GetRootUrl()));
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public async Task<IActionResult> Delete()
         {
             await _todoRepository.DeleteAll();
@@ -79,8 +91,8 @@ namespace Kritner.TodoBackend.WebApi.Controllers
             return Ok();
         }
         
-        [HttpDelete("/{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             await _todoRepository.Delete(id);
             
@@ -90,10 +102,9 @@ namespace Kritner.TodoBackend.WebApi.Controllers
         private string GetRootUrl()
         {
             var sb = new StringBuilder();
-            sb.Append(Request.Scheme);
-            sb.Append("://");
+            sb.Append("https://");
             sb.Append(Request.Host);
-            sb.Append("/");
+            sb.Append("/Todo/");
 
             return sb.ToString();
         }
