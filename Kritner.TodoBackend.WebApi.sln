@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kritner.TodoBackend.WebApi", "Kritner.TodoBackend.WebApi\Kritner.TodoBackend.WebApi.csproj", "{66F069A5-3A05-41A6-82D6-0662FECE1E22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kritner.TodoBackend.Core", "Kritner.TodoBackend.Core\Kritner.TodoBackend.Core.csproj", "{94ED9C2F-1A6A-4DC0-9B19-BEDB4A0A8269}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{66F069A5-3A05-41A6-82D6-0662FECE1E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66F069A5-3A05-41A6-82D6-0662FECE1E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66F069A5-3A05-41A6-82D6-0662FECE1E22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94ED9C2F-1A6A-4DC0-9B19-BEDB4A0A8269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94ED9C2F-1A6A-4DC0-9B19-BEDB4A0A8269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94ED9C2F-1A6A-4DC0-9B19-BEDB4A0A8269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94ED9C2F-1A6A-4DC0-9B19-BEDB4A0A8269}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
